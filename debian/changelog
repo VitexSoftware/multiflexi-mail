@@ -1,0 +1,9 @@
+multiflexi-mail (2.0.0) UNRELEASED; urgency=medium
+
+  * Initial release as separate source package
+  * Two binary packages: multiflexi-mail (core) and
+    multiflexi-mail-ui (web interface)
+  * SMTP connection testing and test message sending via Symfony Mailer
+  * postinst runs multiflexi-cli crprototype sync
+
+ -- "Vítězslav Dvořák" <info@vitexsoftware.cz>  Sat, 01 Mar 2026 12:00:00 +0100

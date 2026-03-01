@@ -1,0 +1,26 @@
+Source: multiflexi-mail
+Section: web
+Priority: optional
+Maintainer: "Vítězslav Dvořák" <info@vitexsoftware.cz>
+Build-Depends: debhelper-compat (=13)
+Standards-Version: 4.6.1
+Homepage: https://github.com/VitexSoftware/multiflexi-mail
+Rules-Requires-Root: no
+
+Package: multiflexi-mail
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, php-vitexsoftware-multiflexi-core, multiflexi-cli (>= 2.2.0), php-symfony-mailer
+Description: MultiFlexi Mail credential prototype
+ SMTP mail credential prototype for MultiFlexi core.
+ Provides the CredentialProtoType class that defines Mailer DSN
+ and sender address configuration fields using Symfony Mailer.
+
+Package: multiflexi-mail-ui
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, multiflexi-mail (= ${binary:Version}), multiflexi-web
+Description: MultiFlexi Mail UI components
+ Mail connection dialog for MultiFlexi web interface.
+ Tests SMTP connectivity, displays server capabilities (EHLO),
+ and sends test messages via Symfony Mailer.
