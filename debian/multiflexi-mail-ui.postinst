@@ -2,7 +2,6 @@
 # postinst script for multiflexi-mail-ui
 set -e
 
-composer-debian multiflexi
 
 #DEBHELPER#
 
