@@ -29,6 +29,9 @@ class Mail extends \MultiFlexi\Ui\CredentialFormHelperPrototype
         $dsn = $dsnField ? $dsnField->getValue() : null;
         $from = $fromField ? $fromField->getValue() : '';
 
+        // Always show the DSN builder wizard
+        $this->addItem($this->buildDsnWizard($dsn));
+
         if (empty($dsn)) {
             $this->addItem(new \Ease\TWB4\Alert('danger', _('Mailer DSN is not set')));
             parent::finalize();
@@ -129,6 +132,189 @@ class Mail extends \MultiFlexi\Ui\CredentialFormHelperPrototype
         }
 
         parent::finalize();
+    }
+
+    /**
+     * Build the interactive DSN wizard panel.
+     */
+    private function buildDsnWizard(?string $currentDsn): \Ease\Html\DivTag
+    {
+        $wizardId = 'dsn-wizard-'.bin2hex(random_bytes(4));
+
+        // Pre-parse current DSN to prefill the wizard
+        $prefill = ['scheme' => 'smtp', 'host' => '', 'port' => '', 'user' => '', 'pass' => ''];
+
+        if (!empty($currentDsn)) {
+            $parsed = self::parseDsn($currentDsn);
+
+            if ($parsed !== null) {
+                $prefill = $parsed;
+                $prefill['port'] = (string) $prefill['port'];
+            }
+        }
+
+        $wizard = new \Ease\Html\DivTag(null, ['id' => $wizardId, 'class' => 'card mb-3']);
+
+        $header = new \Ease\Html\DivTag(
+            new \Ease\Html\H5Tag('✉ '._('MAIL_DSN Builder')),
+            ['class' => 'card-header bg-light'],
+        );
+        $wizard->addItem($header);
+
+        $body = new \Ease\Html\DivTag(null, ['class' => 'card-body']);
+
+        // Transport selector
+        $body->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnTransport_'.$wizardId, _('Transport'), ['class' => 'form-label fw-bold']),
+            new \Ease\Html\SelectTag('dsnTransport_'.$wizardId, [
+                'smtp' => 'SMTP (smtp://)',
+                'sendmail' => 'Sendmail (sendmail://default)',
+                'native' => 'Native PHP (native://default)',
+            ], $prefill['scheme'], ['class' => 'form-select', 'id' => 'dsnTransport_'.$wizardId]),
+        ], ['class' => 'mb-3']));
+
+        // SMTP fields container
+        $smtpFields = new \Ease\Html\DivTag(null, ['id' => 'dsnSmtpFields_'.$wizardId]);
+
+        // Host
+        $smtpFields->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnHost_'.$wizardId, _('SMTP Host'), ['class' => 'form-label']),
+            new \Ease\Html\InputTextTag('dsnHost_'.$wizardId, $prefill['host'], [
+                'class' => 'form-control',
+                'id' => 'dsnHost_'.$wizardId,
+                'placeholder' => 'smtp.example.com',
+            ]),
+        ], ['class' => 'mb-3']));
+
+        // Port
+        $smtpFields->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnPort_'.$wizardId, _('Port'), ['class' => 'form-label']),
+            new \Ease\Html\SelectTag('dsnPort_'.$wizardId, [
+                '25' => '25 (SMTP)',
+                '465' => '465 (SMTPS / Implicit TLS)',
+                '587' => '587 (Submission / STARTTLS)',
+                '2525' => '2525 (Alternative)',
+            ], $prefill['port'] ?: '587', ['class' => 'form-select', 'id' => 'dsnPort_'.$wizardId]),
+        ], ['class' => 'mb-3']));
+
+        // Username
+        $smtpFields->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnUser_'.$wizardId, _('Username (optional)'), ['class' => 'form-label']),
+            new \Ease\Html\InputTextTag('dsnUser_'.$wizardId, $prefill['user'], [
+                'class' => 'form-control',
+                'id' => 'dsnUser_'.$wizardId,
+                'placeholder' => 'user@example.com',
+            ]),
+        ], ['class' => 'mb-3']));
+
+        // Password
+        $smtpFields->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnPass_'.$wizardId, _('Password (optional)'), ['class' => 'form-label']),
+            new \Ease\Html\InputTag('dsnPass_'.$wizardId, $prefill['pass'], [
+                'type' => 'password',
+                'class' => 'form-control',
+                'id' => 'dsnPass_'.$wizardId,
+                'placeholder' => '••••••••',
+            ]),
+        ], ['class' => 'mb-3']));
+
+        $body->addItem($smtpFields);
+
+        // Preview
+        $body->addItem(new \Ease\Html\DivTag([
+            new \Ease\Html\LabelTag('dsnPreview_'.$wizardId, _('Composed DSN'), ['class' => 'form-label fw-bold']),
+            new \Ease\Html\InputTextTag('dsnPreview_'.$wizardId, $currentDsn ?? '', [
+                'class' => 'form-control font-monospace bg-light',
+                'id' => 'dsnPreview_'.$wizardId,
+                'readonly' => 'readonly',
+            ]),
+        ], ['class' => 'mb-3']));
+
+        // Apply button
+        $body->addItem(new \Ease\Html\DivTag(
+            new \Ease\Html\ATag('#', '📋 '._('Apply to MAIL_DSN'), [
+                'class' => 'btn btn-primary',
+                'id' => 'dsnApply_'.$wizardId,
+            ]),
+            ['class' => 'mb-2'],
+        ));
+
+        $wizard->addItem($body);
+
+        // JavaScript
+        $js = <<<JS
+(function(){
+    var wid = '{$wizardId}';
+    var transport = document.getElementById('dsnTransport_' + wid);
+    var smtpFields = document.getElementById('dsnSmtpFields_' + wid);
+    var host = document.getElementById('dsnHost_' + wid);
+    var port = document.getElementById('dsnPort_' + wid);
+    var user = document.getElementById('dsnUser_' + wid);
+    var pass = document.getElementById('dsnPass_' + wid);
+    var preview = document.getElementById('dsnPreview_' + wid);
+    var applyBtn = document.getElementById('dsnApply_' + wid);
+
+    function encodePart(s) {
+        return encodeURIComponent(s).replace(/%40/g, '%40');
+    }
+
+    function updatePreview() {
+        var scheme = transport.value;
+        if (scheme === 'sendmail' || scheme === 'native') {
+            preview.value = scheme + '://default';
+            smtpFields.style.display = 'none';
+            return;
+        }
+        smtpFields.style.display = '';
+        var dsn = scheme + '://';
+        var u = user.value.trim();
+        var p = pass.value;
+        if (u) {
+            dsn += encodePart(u);
+            if (p) dsn += ':' + encodePart(p);
+            dsn += '@';
+        }
+        dsn += host.value.trim() || 'localhost';
+        if (port.value) dsn += ':' + port.value;
+        preview.value = dsn;
+    }
+
+    transport.addEventListener('change', updatePreview);
+    host.addEventListener('input', updatePreview);
+    port.addEventListener('change', updatePreview);
+    user.addEventListener('input', updatePreview);
+    pass.addEventListener('input', updatePreview);
+
+    applyBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector('input[name="MAIL_DSN"], input[id*="MAIL_DSN"]');
+        if (!target) {
+            var inputs = document.querySelectorAll('input[type="text"]');
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].name && inputs[i].name.indexOf('MAIL_DSN') !== -1) {
+                    target = inputs[i];
+                    break;
+                }
+            }
+        }
+        if (target) {
+            target.value = preview.value;
+            target.dispatchEvent(new Event('change', {bubbles: true}));
+            applyBtn.textContent = '\u2705 ' + applyBtn.textContent.replace(/^[\S]+ /, '');
+            setTimeout(function() { applyBtn.textContent = '\uD83D\uDCCB ' + applyBtn.textContent.replace(/^[\S]+ /, ''); }, 2000);
+        } else {
+            alert('MAIL_DSN input field not found on this page.');
+        }
+    });
+
+    if (transport.value !== 'smtp') smtpFields.style.display = 'none';
+    if (!preview.value) updatePreview();
+})();
+JS;
+
+        $wizard->addItem(new \Ease\Html\ScriptTag($js));
+
+        return $wizard;
     }
 
     /**
