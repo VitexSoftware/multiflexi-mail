@@ -30,7 +30,7 @@ class Mail extends \MultiFlexi\Ui\CredentialFormHelperPrototype
         $from = $fromField ? $fromField->getValue() : '';
 
         // Always show the DSN builder wizard
-        $this->addItem($this->buildDsnWizard($dsn));
+        $this->addItem(self::buildDsnWizard($dsn));
 
         if (empty($dsn)) {
             $this->addItem(new \Ease\TWB4\Alert('danger', _('Mailer DSN is not set')));
@@ -137,7 +137,7 @@ class Mail extends \MultiFlexi\Ui\CredentialFormHelperPrototype
     /**
      * Build the interactive DSN wizard panel.
      */
-    private function buildDsnWizard(?string $currentDsn): \Ease\Html\DivTag
+    private static function buildDsnWizard(?string $currentDsn): \Ease\Html\DivTag
     {
         $wizardId = 'dsn-wizard-'.bin2hex(random_bytes(4));
 
@@ -300,8 +300,8 @@ class Mail extends \MultiFlexi\Ui\CredentialFormHelperPrototype
         if (target) {
             target.value = preview.value;
             target.dispatchEvent(new Event('change', {bubbles: true}));
-            applyBtn.textContent = '\u2705 ' + applyBtn.textContent.replace(/^[\S]+ /, '');
-            setTimeout(function() { applyBtn.textContent = '\uD83D\uDCCB ' + applyBtn.textContent.replace(/^[\S]+ /, ''); }, 2000);
+            applyBtn.textContent = '\\u2705 ' + applyBtn.textContent.replace(/^[\\S]+ /, '');
+            setTimeout(function() { applyBtn.textContent = '\\uD83D\\uDCCB ' + applyBtn.textContent.replace(/^[\\S]+ /, ''); }, 2000);
         } else {
             alert('MAIL_DSN input field not found on this page.');
         }
@@ -320,7 +320,7 @@ JS;
     /**
      * Parse a Symfony Mailer DSN string.
      *
-     * @return array{scheme: string, user: string, pass: string, host: string, port: int}|null
+     * @return null|array{scheme: string, user: string, pass: string, host: string, port: int}
      */
     private static function parseDsn(string $dsn): ?array
     {
