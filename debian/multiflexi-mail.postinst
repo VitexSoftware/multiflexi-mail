@@ -5,7 +5,7 @@ set -e
 case "$1" in
     configure)
         if [ -x /usr/bin/multiflexi-cli ]; then
-            multiflexi-cli crprototype sync || true
+            multiflexi-cli crprototype sync
         fi
         ;;
 
