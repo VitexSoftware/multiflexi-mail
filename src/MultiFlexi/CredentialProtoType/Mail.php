@@ -56,23 +56,23 @@ class Mail extends \MultiFlexi\CredentialProtoType implements \MultiFlexi\creden
     {
     }
 
-    public static function name(): string
+    public function name(): string
     {
         return _('Mail (SMTP)');
     }
 
-    public static function description(): string
+    public function description(): string
     {
         return _('SMTP mail delivery via Symfony Mailer');
     }
 
-    public static function uuid(): string
+    public function uuid(): string
     {
-        return '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+        return 'f6c8e33b-9d10-4766-9eff-6e21c468cd6f';
     }
 
     #[\Override]
-    public static function logo(): string
+    public function logo(): string
     {
         return self::$logo;
     }
