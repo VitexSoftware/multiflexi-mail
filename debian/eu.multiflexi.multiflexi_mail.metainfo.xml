@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>eu.multiflexi.multiflexi_mail</id>
+  <icon type="stock">multiflexi-mail</icon>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>MultiFlexi Mail</name>
+  <summary>SMTP mail credential prototype for MultiFlexi</summary>
+  <description>
+    <p>
+      Provides SMTP mail credential prototype for MultiFlexi core. Defines Mailer DSN and sender address configuration fields using Symfony Mailer. Includes UI components for testing SMTP connectivity and sending test messages.
+    </p>
+  </description>
+  <url type="homepage">https://github.com/VitexSoftware/multiflexi-mail</url>
+  <url type="bugtracker">https://github.com/VitexSoftware/multiflexi-mail/issues</url>
+  <developer id="cz.vitexsoftware">
+    <name>VitexSoftware</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+</component>
