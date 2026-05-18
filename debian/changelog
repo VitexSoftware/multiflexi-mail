@@ -1,8 +1,13 @@
-multiflexi-mail (2.0.1) UNRELEASED; urgency=medium
+multiflexi-mail (2.0.2) unstable; urgency=medium
 
+  [ vitex ]
   * update for current multiflexi-core
 
- -- vitex <info@vitexsoftware.cz>  Wed, 01 Apr 2026 00:47:45 +0200
+  [ Vítězslav Dvořák ]
+  * Packaging: Standards-Version 4.7.0, Jenkinsfile CI improvements,
+    AppStream metainfo extends/provides/releases
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 18 May 2026 17:17:24 +0200
 
 multiflexi-mail (2.0.0) unstable; urgency=medium
 

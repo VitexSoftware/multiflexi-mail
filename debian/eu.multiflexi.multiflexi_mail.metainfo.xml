@@ -11,8 +11,15 @@
       Provides SMTP mail credential prototype for MultiFlexi core. Defines Mailer DSN and sender address configuration fields using Symfony Mailer. Includes UI components for testing SMTP connectivity and sending test messages.
     </p>
   </description>
+  <extends>cz.vitexsoftware.multiflexi</extends>
   <url type="homepage">https://github.com/VitexSoftware/multiflexi-mail</url>
   <url type="bugtracker">https://github.com/VitexSoftware/multiflexi-mail/issues</url>
+  <provides>
+    <library>MultiFlexi/CredentialProtoType/Mail.php</library>
+  </provides>
+  <releases>
+    <release version="2.0.2" date="2025-01-01" type="stable" />
+  </releases>
   <developer id="cz.vitexsoftware">
     <name>VitexSoftware</name>
   </developer>

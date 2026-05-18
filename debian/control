@@ -2,8 +2,9 @@ Source: multiflexi-mail
 Section: web
 Priority: optional
 Maintainer: "Vítězslav Dvořák" <info@vitexsoftware.cz>
-Build-Depends: debhelper-compat (=13)
-Standards-Version: 4.6.1
+Build-Depends:
+ debhelper-compat (= 13),
+Standards-Version: 4.7.0
 Homepage: https://github.com/VitexSoftware/multiflexi-mail
 Rules-Requires-Root: no
 
