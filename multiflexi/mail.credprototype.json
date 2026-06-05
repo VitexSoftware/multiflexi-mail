@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/credential-prototype.json",
+  "uuid": "f6c8e33b-9d10-4766-9eff-6e21c468cd6f",
+  "code": "Mail",
+  "name": {
+    "en": "Mail (SMTP)",
+    "cs": "Pošta (SMTP)"
+  },
+  "description": {
+    "en": "SMTP mail delivery via Symfony Mailer",
+    "cs": "Doručování pošty přes SMTP pomocí Symfony Mailer"
+  },
+  "version": "1.0",
+  "logo": "Mail.svg",
+  "homepage": "https://github.com/VitexSoftware/multiflexi-mail",
+  "tags": [
+    "mail",
+    "SMTP",
+    "email",
+    "notification"
+  ],
+  "fields": [
+    {
+      "keyword": "MAILER_DSN",
+      "type": "string",
+      "name": {
+        "en": "Mailer DSN",
+        "cs": "DSN poštovního serveru"
+      },
+      "description": {
+        "en": "Symfony Mailer DSN string",
+        "cs": "DSN řetězec Symfony Mailer"
+      },
+      "hint": "smtp://user:pass@smtp.example.com:587",
+      "required": true
+    }
+  ]
+}
