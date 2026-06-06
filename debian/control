@@ -20,7 +20,7 @@ Description: MultiFlexi Mail credential prototype
 Package: multiflexi-mail-ui
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, multiflexi-mail (= ${binary:Version}), multiflexi-web
+Depends: ${misc:Depends}, multiflexi-mail (= ${binary:Version}), multiflexi-web|multiflexi-web5
 Description: MultiFlexi Mail UI components
  Mail connection dialog for MultiFlexi web interface.
  Tests SMTP connectivity, displays server capabilities (EHLO),
