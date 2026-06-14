@@ -22,7 +22,7 @@ namespace MultiFlexi\CredentialProtoType;
  *
  * @no-named-arguments
  */
-class Mail extends \MultiFlexi\CredentialProtoType implements \MultiFlexi\credentialTypeInterface
+class Mail extends \MultiFlexi\CredentialProtoType implements \MultiFlexi\credentialTypeInterface, \MultiFlexi\checkableCredentialInterface
 {
     public static string $logo = 'Mail.svg';
 
@@ -75,5 +75,48 @@ class Mail extends \MultiFlexi\CredentialProtoType implements \MultiFlexi\creden
     public function logo(): string
     {
         return self::$logo;
+    }
+
+    #[\Override]
+    public function checkAvailability(): \MultiFlexi\CredentialCheckResult
+    {
+        $dsn = (string) ($this->configFieldsInternal->getFieldByCode('MAIL_DSN')?->getValue() ?? '');
+
+        if ($dsn === '') {
+            return new \MultiFlexi\CredentialCheckResult(
+                \MultiFlexi\CredentialState::Misconfigured,
+                _('MAIL_DSN is not set'),
+                time(),
+            );
+        }
+
+        $parsed = parse_url($dsn);
+
+        if ($parsed === false || empty($parsed['host'])) {
+            return new \MultiFlexi\CredentialCheckResult(
+                \MultiFlexi\CredentialState::Misconfigured,
+                _('MAIL_DSN cannot be parsed — check the DSN format (e.g. smtp://user:pass@host:465)'),
+                time(),
+            );
+        }
+
+        $host = $parsed['host'];
+        $port = (int) ($parsed['port'] ?? 25);
+
+        // Host reachability only — avoid sending a test message as a health probe.
+        $socket = @fsockopen($host, $port, $errno, $errstr, 5.0);
+
+        if ($socket === false) {
+            return new \MultiFlexi\CredentialCheckResult(
+                \MultiFlexi\CredentialState::Unavailable,
+                sprintf(_('Cannot reach mail server %s:%d — %s'), $host, $port, $errstr),
+                time(),
+                60,
+            );
+        }
+
+        fclose($socket);
+
+        return new \MultiFlexi\CredentialCheckResult(\MultiFlexi\CredentialState::Available, '', time(), 300);
     }
 }

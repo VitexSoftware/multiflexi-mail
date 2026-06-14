@@ -1,3 +1,10 @@
+multiflexi-mail (2.1.0) UNRELEASED; urgency=medium
+
+  * Mail prototype: add checkAvailability() — parses MAIL_DSN, probes SMTP
+    host:port via fsockopen (5 s timeout); no test message sent
+
+ -- vitex <info@vitexsoftware.cz>  Sat, 14 Jun 2026 12:00:00 +0200
+
 multiflexi-mail (2.0.2) unstable; urgency=medium
 
   [ vitex ]
