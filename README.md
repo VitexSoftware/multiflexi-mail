@@ -1,4 +1,5 @@
 # multiflexi-mail
+![Packaging: deb](https://img.shields.io/badge/packaging-.deb-red?logo=debian&logoColor=white)
 
 SMTP/Mail credential support for [MultiFlexi](https://multiflexi.eu) via [Symfony Mailer](https://symfony.com/doc/current/mailer.html).
 
