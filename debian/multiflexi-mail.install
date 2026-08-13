@@ -1,3 +1,4 @@
 src/MultiFlexi/CredentialProtoType/Mail.php  usr/share/php/MultiFlexi/CredentialProtoType/
+src/images/Mail.svg	usr/share/multiflexi/images/
 multiflexi-mail.svg	usr/share/icons/hicolor/scalable/apps/
 debian/eu.multiflexi.multiflexi_mail.metainfo.xml	usr/share/metainfo/
