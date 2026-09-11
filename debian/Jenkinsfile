@@ -5,7 +5,7 @@
 String[] distributions = [
 			'debian:bookworm',
 			'debian:trixie',
-//			'debian:forky',    // multiflexi-cli uninstallable: php-symfony-dependency-injection has no choices in forky repo
+			'debian:forky',
 //			'ubuntu:jammy',    // postinst PHP Fatal error: Symfony/Polyfill/Php80/autoload.php not found (path incompatibility)
 			'ubuntu:noble',
 ]
@@ -47,6 +47,7 @@ distributions.each { distro ->
         node {
             ansiColor('xterm') {
                 stage('Checkout ' + distroName) {
+                    sh 'sudo chown -R jenkins:jenkins . 2>/dev/null || true'
                     checkout scm
                     def imageName = vendor + '/' + distro
                     buildImage = docker.image(imageName)
